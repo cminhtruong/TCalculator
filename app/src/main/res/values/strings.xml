@@ -17,4 +17,7 @@
     <string name="dash">/</string>
     <string name="equal">=</string>
     <string name="clear">C</string>
+    <string name="alert_title">Error</string>
+    <string name="alert_content">Stop trying to do something stupid, please.</string>
+    <string name="yes">OK</string>
 </resources>
