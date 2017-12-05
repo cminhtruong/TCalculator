@@ -1,10 +1,7 @@
 package calc.com.davidetruong.tcalculator;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
@@ -13,7 +10,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnLongClick;
-import butterknife.OnTouch;
+
+import static java.lang.Math.round;
 
 /**
  * @author davidetruong
@@ -156,7 +154,37 @@ public class MainActivity extends Activity {
     @OnLongClick(R.id.btn_clear)
     public boolean holdClear() {
         tv_result.setText("");
+        leftNumber = "";
+        rightNumber = "";
+        runningNumber = "";
+        result = 0;
+        currentOperator = null;
         return true;
+    }
+
+    @OnClick(R.id.btn_plus)
+    public void pressedPlus() {
+        processOperator(Operator.PLUS);
+    }
+
+    @OnClick(R.id.btn_minus)
+    public void pressedMinus() {
+        processOperator(Operator.MINUS);
+    }
+
+    @OnClick(R.id.btn_multi)
+    public void pressedMulti() {
+        processOperator(Operator.MULTI);
+    }
+
+    @OnClick(R.id.btn_dash)
+    public void pressedDash() {
+        processOperator(Operator.DASH);
+    }
+
+    @OnClick(R.id.btn_equal)
+    public void pressedEqual() {
+        processOperator(Operator.EQUAL);
     }
 
     /**
@@ -169,15 +197,37 @@ public class MainActivity extends Activity {
         tv_result.setText(runningNumber);
     }
 
-    private void processOperator(Operator operator) {
+    /**
+     * Check operator
+     *
+     * @param operator
+     */
+    public void processOperator(Operator operator) {
         if (currentOperator != null) {
             if (!rightNumber.equals("")) {
                 rightNumber = runningNumber;
-
+                runningNumber = "";
+                switch (currentOperator) {
+                    case DASH:
+                        result = Double.parseDouble(leftNumber) / Double.parseDouble(rightNumber);
+                        break;
+                    case PLUS:
+                        result = Double.parseDouble(leftNumber) + Double.parseDouble(rightNumber);
+                        break;
+                    case MINUS:
+                        result = Double.parseDouble(leftNumber) - Double.parseDouble(rightNumber);
+                        break;
+                    case MULTI:
+                        result = Double.parseDouble(leftNumber) * Double.parseDouble(rightNumber);
+                        break;
+                }
+                leftNumber = String.valueOf(result);
+                tv_result.setText(leftNumber);
             }
         } else {
             leftNumber = runningNumber;
             runningNumber = "";
         }
+        currentOperator = operator;
     }
 }
